@@ -3,6 +3,7 @@ import { useTheme } from "./context/theme-provider"
 import logo from "../Public/logo.png"
 import logo2 from "../Public/logo2.png"
 import { Moon, Sun } from "lucide-react"
+import CitySearch from "./city-search"
 
 const Header = () => {
     const {theme, setTheme} = useTheme()
@@ -16,9 +17,9 @@ const Header = () => {
                     <img src={isDark ? logo : logo2} alt="klimate logo" className="h-14 w-auto" />
                 </Link>
 
-                <div>
-                    {/* search */}
-                    {/* theme toggle */}
+                <div className="flex gap-4">
+                    <CitySearch />
+                    
                     <div onClick={() => setTheme(isDark ? "light" : "dark")}
                         className={`flex items-center cursor-pointer transition-transform duration-500 
                         ${isDark ? "rotate-180" : "rotate-0"}`}>
