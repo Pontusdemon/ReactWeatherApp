@@ -27,8 +27,7 @@ function CitySearch() {
 
   const handleSelect = (cityData: string) => {
     // add country when needed
-    const [lat, lon, name, country] = cityData.split(" | ");
-
+    const [lat, lon, name, country, state] = cityData.split(/\s*\|\s*/);
     // add to search history
     addToHistory.mutate({
       query,
@@ -36,12 +35,12 @@ function CitySearch() {
       country,
       lat: parseFloat(lat),
       lon: parseFloat(lon),
+      state: state || undefined,
     });
 
     setOpen(false);
-    navigate(`/city/${name}?lat=${lat}&lon=${lon}`);
+    navigate(`/city/${name}|${country}|${state || ""}?lat=${lat}&lon=${lon}`);
   };
-
   const {favorites} = useFavorite();
 
   return (
@@ -79,7 +78,7 @@ function CitySearch() {
                     return (
                       <CommandItem
                         key={location.id}
-                        value={`${location.lat} | ${location.lon} | ${location.name} |${location.country}`}
+                        value={`${location.lat} | ${location.lon} | ${location.name} | ${location.country} | ${location.state || ""}`}
                         onSelect={handleSelect}
                       >
                         <Star className="mr-2 h-4 w-4 text-yellow-500" />
@@ -101,26 +100,22 @@ function CitySearch() {
             {history.length > 0 && (
               <>
                 <CommandSeparator />
-                <CommandGroup className="flex items-center justify-between px-2 my-2">
-                  <div>
-                    <p className="text-xs text-muted-foreground">
-                      Recent Searches
-                    </p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => clearHistory.mutate()}
-                    >
-                      <XCircle className="h-4 w-4" />
-                      Clear
-                    </Button>
-                  </div>
-
+                <div className="flex justify-end px-2 py-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => clearHistory.mutate()}
+                  >
+                    <XCircle className="h-4 w-4" />
+                    Clear
+                  </Button>
+                </div>
+                <CommandGroup heading="Recent Searches">
                   {history.map((location) => {
                     return (
                       <CommandItem
                         key={location.id}
-                        value={`${location.lat} | ${location.lon} | ${location.name} |${location.country}`}
+                        value={`${location.lat} | ${location.lon} | ${location.name} | ${location.country} | ${location.state || ""}`}
                         onSelect={handleSelect}
                       >
                         <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -156,7 +151,7 @@ function CitySearch() {
                   return (
                     <CommandItem
                       key={`${location.lat}-${location.lon}`}
-                      value={`${location.lat} | ${location.lon} | ${location.name} |${location.country}`}
+                      value={`${location.lat} | ${location.lon} | ${location.name} | ${location.country} | ${location.state || ""}`}
                       onSelect={handleSelect}
                     >
                       <Search className="mr-2 h-4 w-4" />

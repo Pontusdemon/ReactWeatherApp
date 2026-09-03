@@ -9,6 +9,7 @@ import WeatherForecast from "@/components/weather-forecast";
 import { useForecastQuery, useWeatherQuery } from "@/hooks/use-weather";
 import { AlertTriangle } from "lucide-react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { formatLocationLabel } from "@/lib/utils";
 
 const CityPage = () => {
   const [searchParams] = useSearchParams();
@@ -42,7 +43,7 @@ const CityPage = () => {
   );
   const state = routeState && routeState !== "undefined" ? routeState : undefined;
   const countryCode = routeCountryCode || weatherQuery.data.sys.country;
-  const cityLabel = [cityName, state, countryCode].filter(Boolean).join(", ");
+  const cityLabel = formatLocationLabel(cityName, countryCode, state);
 
   return (
     <div className="space-y-4">
@@ -51,7 +52,10 @@ const CityPage = () => {
         <h1 className="text-3xl font-bold tracking-tight">{cityLabel}</h1>
             <div>
                 {/* Favorite Button */}
-                <FavoriteButton data={{...weatherQuery.data, name: params.cityName}} />
+                <FavoriteButton
+                  data={{ ...weatherQuery.data, name: cityName }}
+                  state={state}
+                />
             </div>
       </div>
 

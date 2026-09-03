@@ -6,9 +6,10 @@ import { toast } from "sonner";
 
 interface FavoriteButtonProps {
   data: WeatherData;
+  state?: string;
 }
 
-const FavoriteButton = ({ data }: FavoriteButtonProps) => {
+const FavoriteButton = ({ data, state }: FavoriteButtonProps) => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorite();
   const isCurrentlyFavorite = isFavorite(data.coord.lat, data.coord.lon);
 
@@ -18,10 +19,11 @@ const FavoriteButton = ({ data }: FavoriteButtonProps) => {
         toast.error(`Removed ${data.name} from favorites`);
     }else{
         addFavorite.mutate({
-            name: data.name,
+            name: data.name.split("|")[0].trim(),
             lat: data.coord.lat,
             lon: data.coord.lon,
             country: data.sys.country,
+            state,
         });
         toast.success(`Added ${data.name} to favorites`);
     }
