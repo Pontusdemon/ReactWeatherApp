@@ -30,7 +30,7 @@ export function useFavorite() {
     mutationFn: async (city: Omit<FavoriteCity, "id" | "AddedAt">) => {
       const newFavorite: FavoriteCity = {
         ...city,
-        id: `${city.lat}-${city.lon}-${Date.now()}`,
+        id: `${city.lat}-${city.lon}`,
         AddedAt: Date.now(),
       };
       const exists = favorites.some((fav) => fav.id === newFavorite.id);
